@@ -19,7 +19,7 @@ using CurrencyCloud.Entity.Pagination;
 using CurrencyCloud.Entity.List;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("CurrencyCloud.Tests")]
+[assembly: InternalsVisibleTo("Currencycloud.Tests")]
 
 namespace CurrencyCloud
 {

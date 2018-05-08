@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CurrencyCloud")]
-[assembly: AssemblyDescription("CurrencyCloud API client library")]
+[assembly: AssemblyTitle("Currencycloud")]
+[assembly: AssemblyDescription("Currencycloud API client library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Currency Cloud")]
+[assembly: AssemblyCompany("Currencycloud")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright © Currency Cloud 2017")]
+[assembly: AssemblyCopyright("Copyright © Currencycloud 2015-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
