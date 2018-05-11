@@ -4,20 +4,13 @@ namespace CurrencyCloud.Entity
 {
     public class Payment : Entity
     {
-        public Payment(
-            string currency,
-            string beneficiaryId,
-            decimal amount,
-            string reason,
-            string reference,
-            string uniqueRequestId)
+        public Payment(string currency, string beneficiaryId, decimal amount, string reason, string reference)
         {
             this.Currency = currency;
             this.BeneficiaryId = beneficiaryId;
             this.Amount = amount;
             this.Reason = reason;
             this.Reference = reference;
-            this.UniqueRequestId = uniqueRequestId;
         }
 
         [Newtonsoft.Json.JsonConstructor]
@@ -108,6 +101,12 @@ namespace CurrencyCloud.Entity
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
+        
+        public string PaymentGroupId { get; set; }
+        
+        public decimal FailureReturnedAmount { get; set; }
+        
+        public string UltimateBeneficiaryName { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -138,7 +137,10 @@ namespace CurrencyCloud.Entity
                    PayerDetailsSource == payment.PayerDetailsSource &&
                    CreatedAt == payment.CreatedAt &&
                    UpdatedAt == payment.UpdatedAt &&
-                   UniqueRequestId == payment.UniqueRequestId;
+                   PaymentGroupId == payment.PaymentGroupId &&
+                   FailureReturnedAmount == payment.FailureReturnedAmount &&
+                   UniqueRequestId == payment.UniqueRequestId &&
+                   UltimateBeneficiaryName == payment.UltimateBeneficiaryName;
         }
 
         public override int GetHashCode()

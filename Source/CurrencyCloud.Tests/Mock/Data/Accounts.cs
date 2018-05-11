@@ -4,30 +4,30 @@
     {
         public static readonly Entity.Account Account1 = new Entity.Account(
             "Acme Ltd.",
-            "company")
+            "company",
+            "164 Bishops Gate",
+            "London",
+            "CR4 3RZ",
+            "GB")
             { 
                 YourReference = "POS-UID-23523",
                 Status = "enabled",
-                Street = "164 Bishops Gate",
-                City = "London",
                 StateOrProvince = "Ontario",
-                PostalCode = "CR4 3RZ",
-                Country = "GB",
                 SpreadTable = "no_markup",
                 IdentificationType = "none"
         };
 
         public static readonly Entity.Account Account2 = new Entity.Account( 
             "Company PLC",
-            "company")
+            "company",
+            "13 London Road",
+            "London",
+            "AB12 CD2",
+            "GB")
         { 
             YourReference = "0012345564ABC",
             Status = "enabled",
-            Street = "13 London Road",
-            City = "London",
             StateOrProvince = "",
-            PostalCode = "AB12 CD2",
-            Country = "GB",
             SpreadTable = "flat_0.5_percent",
             IdentificationType = "none"
         };

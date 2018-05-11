@@ -4,10 +4,14 @@ namespace CurrencyCloud.Entity
 {
     public class Account : Entity
     {
-        public Account(string accountName, string legalEntityType)
+        public Account(string accountName, string legalEntityType, string street, string city, string postalCode, string country)
         {
             this.AccountName = accountName;
             this.LegalEntityType = legalEntityType;
+            this.Street = street;
+            this.City = city;
+            this.PostalCode = postalCode;
+            this.Country = country;
         }
 
         [Newtonsoft.Json.JsonConstructor]

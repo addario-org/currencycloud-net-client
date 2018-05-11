@@ -7,10 +7,7 @@ namespace CurrencyCloud.Entity
     public class Beneficiary : Entity
     {
 
-        public Beneficiary(string bankAccountHolderName,
-            string bankCountry,
-            string currency,
-            string name)
+        public Beneficiary(string bankAccountHolderName, string bankCountry, string currency, string name)
         {
             this.BankAccountHolderName = bankAccountHolderName;
             this.BankCountry = bankCountry;
@@ -123,6 +120,12 @@ namespace CurrencyCloud.Entity
         ///</summary>
         [Param]
         public string BeneficiaryIdentificationValue { get; set; }
+        
+        ///<summary>
+        /// External reference for the beneficiary
+        ///</summary>
+        [Param]
+        public string BeneficiaryExternalReference { get; set; }
 
         ///<summary>
         /// A two-letter country code as defined in ISO 3166-1 of the bank account
@@ -250,7 +253,8 @@ namespace CurrencyCloud.Entity
                    CreatorContactId == beneficiary.CreatorContactId &&
                    BankAddress.SequenceEqual(beneficiary.BankAddress) &&
                    CreatedAt == beneficiary.CreatedAt &&
-                   UpdatedAt == beneficiary.UpdatedAt;
+                   UpdatedAt == beneficiary.UpdatedAt &&
+                   BeneficiaryExternalReference == beneficiary.BeneficiaryExternalReference;
         }
 
         public override int GetHashCode()

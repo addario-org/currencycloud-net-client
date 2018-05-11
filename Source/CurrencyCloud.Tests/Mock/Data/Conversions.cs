@@ -7,7 +7,6 @@
             "GBP",
             "buy",
             10000.23m,
-            "Settling invoices",
             true,
             "my-unique-id"
         );

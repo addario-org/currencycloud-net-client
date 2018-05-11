@@ -42,13 +42,13 @@ namespace CurrencyCloud.Entity
         public string BeneficiaryCompanyName { get; set; }
 
         ///<summary>
-        /// Beneficiary first name
+        /// Beneficiary forename
         ///</summary>
         [Param]
         public string BeneficiaryFirstName { get; set; }
 
         ///<summary>
-        /// Beneficiary second name
+        /// Beneficiary surname
         ///</summary>
         [Param]
         public string BeneficiaryLastName { get; set; }
@@ -130,6 +130,15 @@ namespace CurrencyCloud.Entity
         ///</summary>
         [Param]
         public bool? DefaultBeneficiary { get; set; }
+        
+        ///<summary>
+        /// Controls the search of beneficiaries at all account levels. Defaults to own.
+        /// own: allows to search beneficiary on the main account
+        /// clients: allows to search beneficiary of account sub accounts
+        /// all: allows to search beneficiary across account and sub-accounts
+        ///</summary>
+        [Param]
+        public string Scope { get; set; }
 
     }
 }

@@ -97,6 +97,8 @@ namespace CurrencyCloud.Entity
         public DateTime UpdatedAt { get; set; }
 
         public string UniqueRequestId { get; set; }
+        
+        public decimal UnallocatedFunds { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -136,7 +138,8 @@ namespace CurrencyCloud.Entity
                    PaymentIds.SequenceEqual(conversion.PaymentIds) &&
                    CreatedAt == conversion.CreatedAt &&
                    UpdatedAt == conversion.UpdatedAt &&
-                   UniqueRequestId == conversion.UniqueRequestId;
+                   UniqueRequestId == conversion.UniqueRequestId &&
+                   UnallocatedFunds == conversion.UnallocatedFunds;
         }
 
         public override int GetHashCode()

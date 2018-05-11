@@ -45,7 +45,7 @@ namespace CurrencyCloud.Tests
             player.Play("Validate");
 
             Beneficiary validated = await client.ValidateBeneficiaryAsync(
-                new BeneficiaryValidateParameters("GB", "GBP", "GB")
+                new BeneficiaryValidateParameters("GB", "GBP")
             {
                 AccountNumber = "13071472",
                 RoutingCodeType1 = "sort_code",

@@ -4,13 +4,7 @@ namespace CurrencyCloud.Entity
 {
     public class Contact : Entity
     {
-        public Contact(
-            string accountId,
-            string firstName,
-            string lastName,
-            string emailAddress,
-            string phoneNumber
-            )
+        public Contact(string accountId, string firstName, string lastName, string emailAddress, string phoneNumber)
         {
             this.AccountId = accountId;
             this.FirstName = firstName;

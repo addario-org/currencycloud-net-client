@@ -5,13 +5,10 @@ namespace CurrencyCloud.Entity
 {
     public class BeneficiaryValidateParameters
     {
-        public BeneficiaryValidateParameters(string bankCountry,
-            string currency,
-            string beneficiaryCountry)
+        public BeneficiaryValidateParameters(string bankCountry, string currency)
         {
             this.BankCountry = bankCountry;
             this.Currency = currency;
-            this.BeneficiaryCountry = beneficiaryCountry;
         }
 
         /// <summary>
@@ -63,13 +60,13 @@ namespace CurrencyCloud.Entity
         public string BeneficiaryCompanyName { get; set; }
 
         ///<summary>
-        /// Beneficiary first name
+        /// Beneficiary forename
         ///</summary>
         [Param]
         public string BeneficiaryFirstName { get; set; }
 
         ///<summary>
-        /// Beneficiary second name
+        /// Beneficiary surname
         ///</summary>
         [Param]
         public string BeneficiaryLastName { get; set; }

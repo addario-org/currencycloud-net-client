@@ -23,13 +23,13 @@ namespace CurrencyCloud.Entity
         public string CompanyName { get; set; }
 
         ///<summary>
-        /// Payer first name
+        /// Payer forename name
         ///</summary>
         [Param]
         public string FirstName { get; set; }
 
         ///<summary>
-        /// Payer second name
+        /// Payer surname name
         ///</summary>
         [Param]
         public string LastName { get; set; }

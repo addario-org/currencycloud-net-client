@@ -16,13 +16,13 @@
         public string AccountId { get; set; }
 
         ///<summary>
-        /// First name
+        /// Forename
         ///</summary>
         [Param]
         public string FirstName { get; set; }
 
         ///<summary>
-        /// Last name
+        /// Surname
         ///</summary>
         [Param]
         public string LastName { get; set; }

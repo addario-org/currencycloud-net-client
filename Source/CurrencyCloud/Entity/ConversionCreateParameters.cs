@@ -4,21 +4,12 @@ namespace CurrencyCloud.Entity
 {
     public class ConversionCreate
     {
-        public ConversionCreate(
-            string buyCurrency,
-            string sellCurrency,
-            string fixedSide,
-            decimal amount,
-            string reason,
-            bool termAgreement,
-            string uniqueRequestId
-            )
+        public ConversionCreate(string buyCurrency, string sellCurrency, string fixedSide, decimal amount, bool termAgreement, string uniqueRequestId)
         {
             this.BuyCurrency = buyCurrency;
             this.SellCurrency = sellCurrency;
             this.FixedSide = fixedSide;
             this.Amount = amount;
-            this.Reason = reason;
             this.TermAgreement = termAgreement;
             this.UniqueRequestId = uniqueRequestId;
         }

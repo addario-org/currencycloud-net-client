@@ -4,12 +4,7 @@ namespace CurrencyCloud.Entity
 {
     public class DetailedRateParameters
     {
-        public DetailedRateParameters(
-            string buyCurrency,
-            string sellCurrency,
-            string fixedSide,
-            decimal amount
-            )
+        public DetailedRateParameters(string buyCurrency, string sellCurrency, string fixedSide, decimal amount)
         {
             this.BuyCurrency = buyCurrency;
             this.SellCurrency = sellCurrency;
