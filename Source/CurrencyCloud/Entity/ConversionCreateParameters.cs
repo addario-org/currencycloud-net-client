@@ -2,6 +2,7 @@
 
 namespace CurrencyCloud.Entity
 {
+    [Obsolete("Class ConversionCreate is deprecated. Use a Conversion object instead setting its properties to appropiate values", false)]
     public class ConversionCreate
     {
         public ConversionCreate(string buyCurrency, string sellCurrency, string fixedSide, decimal amount, bool termAgreement, string uniqueRequestId)
@@ -61,7 +62,7 @@ namespace CurrencyCloud.Entity
         ///</summary>
         [Param]
         public decimal? ClientSellAmount { get; set; }
-        
+
         ///<summary>
         /// User provided Idempotency Id
         ///</summary>

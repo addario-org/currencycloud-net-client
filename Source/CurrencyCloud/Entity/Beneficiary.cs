@@ -16,12 +16,10 @@ namespace CurrencyCloud.Entity
         }
 
         [Newtonsoft.Json.JsonConstructor]
-        internal Beneficiary()
-        {
-        }
+        internal Beneficiary() { }
 
         /// <summary>
-        /// ID of the beneficiary 
+        /// ID of the beneficiary
         /// </summary>
         public string Id { get; set; }
 
@@ -120,7 +118,7 @@ namespace CurrencyCloud.Entity
         ///</summary>
         [Param]
         public string BeneficiaryIdentificationValue { get; set; }
-        
+
         ///<summary>
         /// External reference for the beneficiary
         ///</summary>

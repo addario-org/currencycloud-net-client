@@ -6,6 +6,14 @@ namespace CurrencyCloud.Entity
 {
     public class Conversion : Entity
     {
+        public Conversion(string buyCurrency, string sellCurrency, string fixedSide, decimal amount, bool termAgreement)
+        {
+            this.BuyCurrency = buyCurrency;
+            this.SellCurrency = sellCurrency;
+            this.FixedSide = fixedSide;
+            this.Amount = amount;
+            this.TermAgreement = termAgreement;
+        }
 
         [Newtonsoft.Json.JsonConstructor]
         internal Conversion() { }
@@ -58,6 +66,8 @@ namespace CurrencyCloud.Entity
 
         public string FixedSide { get; set; }
 
+        public decimal Amount { get; set; }
+
         public decimal PartnerBuyAmount { get; set; }
 
         public decimal PartnerSellAmount { get; set; }
@@ -97,8 +107,10 @@ namespace CurrencyCloud.Entity
         public DateTime UpdatedAt { get; set; }
 
         public string UniqueRequestId { get; set; }
-        
+
         public decimal UnallocatedFunds { get; set; }
+
+        public bool TermAgreement { get; set; }
 
         public override bool Equals(object obj)
         {

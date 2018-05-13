@@ -537,9 +537,9 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns newly created conversion.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<Conversion> CreateConversionAsync(ConversionCreate create)
+        public async Task<Conversion> CreateConversionAsync(Conversion conversion)
         {
-            var paramsObj = ParamsObject.CreateFromStaticObject(create);
+            var paramsObj = ParamsObject.CreateFromStaticObject(conversion);
 
             return await RequestAsync<Conversion>("/v2/conversions/create", HttpMethod.Post, paramsObj);
         }
@@ -718,9 +718,9 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the requested rate.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<Rate> GetRateAsync(DetailedRateParameters parameters)
+        public async Task<Rate> GetRateAsync(DetailedRates detailedRates)
         {
-            ParamsObject paramsObj = ParamsObject.CreateFromStaticObject(parameters);
+            ParamsObject paramsObj = ParamsObject.CreateFromStaticObject(detailedRates);
 
             return await RequestAsync<Rate>("/v2/rates/detailed", HttpMethod.Get, paramsObj);
         }
