@@ -5,14 +5,14 @@
         public static readonly Entity.Account Account1 = new Entity.Account(
             "Acme Ltd.",
             "company",
-            "164 Bishops Gate",
+            "12 Steward St",
             "London",
-            "CR4 3RZ",
+            "E1 6FQ",
             "GB")
             { 
                 YourReference = "POS-UID-23523",
                 Status = "enabled",
-                StateOrProvince = "Ontario",
+                StateOrProvince = "London",
                 SpreadTable = "no_markup",
                 IdentificationType = "none"
         };
@@ -20,9 +20,9 @@
         public static readonly Entity.Account Account2 = new Entity.Account( 
             "Company PLC",
             "company",
-            "13 London Road",
+            "12 Steward St",
             "London",
-            "AB12 CD2",
+            "E1 6FQ",
             "GB")
         { 
             YourReference = "0012345564ABC",
