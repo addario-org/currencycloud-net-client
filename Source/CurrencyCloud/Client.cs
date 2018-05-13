@@ -100,7 +100,7 @@ namespace CurrencyCloud
                 requestUri += "?" + paramsObj.ToQueryString();
             }
 
-            Func<Task<TResult>> requestAsyncDelegate = async () => 
+            Func<Task<TResult>> requestAsyncDelegate = async () =>
             {
                 HttpRequestMessage httpRequestMessage = null;
                 if (method == HttpMethod.Get)
@@ -221,7 +221,7 @@ namespace CurrencyCloud
         {
             httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
-          
+
             httpClient.BaseAddress = new Uri(apiServer.Url);
 
             credentials = new Credentials(loginId,apiKey);
@@ -453,21 +453,6 @@ namespace CurrencyCloud
         #endregion
 
         #region Contacts
-
-        /// <summary>
-        /// Creates reset token for the contact.
-        /// </summary>
-        /// <param name="loginId">Login id of the contact.</param>
-        /// <returns>Asynchronous task.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
-        /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task CreateResetTokenAsync(string loginId)
-        {
-            var paramsObj = new ParamsObject();
-            paramsObj.Add("LoginId", loginId);
-
-            await RequestAsync("/v2/contacts/reset_token/create", HttpMethod.Post, paramsObj);
-        }
 
         /// <summary>
         /// Creates a new contact.
@@ -710,6 +695,18 @@ namespace CurrencyCloud
             return await RequestAsync<Payment>("/v2/payments/" + id + "/delete", HttpMethod.Post, null);
         }
 
+        /// <summary>
+        /// Returns a hash containing the details of MT103 information for a SWIFT payments.
+        /// </summary>
+        /// <param name="id">Id payment.</param>
+        /// <returns>Asynchronous task, which returns the MT103 information for a SWIFT payment.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<Payment> RetrievePaymentSubmissionAsync(string id)
+        {
+            return await RequestAsync<Payment>("/v2/payments/" + id + "/submission", HttpMethod.Post, null);
+        }
+
         #endregion
 
         #region Rates
@@ -839,6 +836,30 @@ namespace CurrencyCloud
             }
 
             return await RequestAsync<SettlementAccountsList>("/v2/reference/settlement_accounts", HttpMethod.Get, optional);
+        }
+
+        /// <summary>
+        /// Gets required payer details and their basic validation formats.
+        /// </summary>
+        /// <param name="payerCountry">ISO 3166-1 country code</param>
+        /// <param name="payerEntityType">Optional: Payer Entity Type (could be company or individual)</param>
+        /// <param name="paymentType">Optional: Payment Type (could be priority or regular)</param>
+        /// <returns>Asynchronous task, which returns required payer details and their basic validation formats.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PayerDetailsList> GetPayerRequiredDetailsAsync(string payerCountry, string payerEntityType = null, string paymentType = null)
+        {
+            ParamsObject optional = null;
+            if (!string.IsNullOrEmpty(payerEntityType)
+                || !string.IsNullOrEmpty(paymentType)
+            )
+            {
+                optional = new ParamsObject();
+                optional.AddNotNull("PayerEntityType", payerEntityType);
+                optional.AddNotNull("PaymentType", paymentType);
+            }
+
+            return await RequestAsync<PayerDetailsList>("/v2/reference/payer_required_details", HttpMethod.Get, optional);
         }
 
         #endregion
