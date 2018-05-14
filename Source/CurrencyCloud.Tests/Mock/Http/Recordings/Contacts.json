@@ -9,7 +9,7 @@
           "headers": {
             "User-Agent": "CurrencyCloudSDK/2.0 .NET/0.10.4.0"
           },
-          "body": "?login_id=test.it@mailinator.com&api_key=b5266326b1855443544626f188b8a234da99e1c36d91819419e17091b4f0a7f4"
+          "body": "?login_id=development@currencycloud.com&api_key=deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
         },
         "response": {
           "status": 200,
@@ -516,7 +516,7 @@
             "X-Request-Id": "2910007472633409851"
           },
           "body": {
-            "login_id": "test.it@mailinator.com",
+            "login_id": "development@currencycloud.com",
             "id": "8f639ab2-2b85-4327-9eb1-01ee4f0c77bc",
             "first_name": "Irina",
             "last_name": "Gudkova",
@@ -539,7 +539,7 @@
         "request": {
           "method": "GET",
           "path": "/v2/contacts/find",
-          "query": "?login_id=test.it@mailinator.com&order=created_at&order_asc_desc=desc&per_page=5",
+          "query": "?login_id=development@currencycloud.com&order=created_at&order_asc_desc=desc&per_page=5",
           "headers": {
             "X-Auth-Token": "034d23d24490718e8766853e14d480b7",
             "User-Agent": "CurrencyCloudSDK/2.0 .NET/0.10.4.0"
@@ -555,7 +555,7 @@
           "body": {
             "contacts": [
               {
-                "login_id": "test.it@mailinator.com",
+                "login_id": "development@currencycloud.com",
                 "id": "8f639ab2-2b85-4327-9eb1-01ee4f0c77bc",
                 "first_name": "Irina",
                 "last_name": "Gudkova",
@@ -608,7 +608,7 @@
             "X-Request-Id": "2910007472633409851"
           },
           "body": {
-            "login_id": "test.it@mailinator.com",
+            "login_id": "development@currencycloud.com",
             "id": "8f639ab2-2b85-4327-9eb1-01ee4f0c77bc",
             "first_name": "Irina",
             "last_name": "Gudkova",
