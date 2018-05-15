@@ -533,7 +533,7 @@ namespace CurrencyCloud
         /// <summary>
         /// Creates a new conversion.
         /// </summary>
-        /// <param name="create">Data object for new conversion</param>
+        /// <param name="conversion">Data object for new conversion</param>
         /// <returns>Asynchronous task, which returns newly created conversion.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
@@ -568,6 +568,50 @@ namespace CurrencyCloud
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
             return await RequestAsync<PaginatedConversions>("/v2/conversions/find", HttpMethod.Get, optional);
+        }
+
+        #endregion
+
+        #region Ibans
+
+        /// <summary>
+        /// Find IBANs assigned to the logged in account.
+        /// </summary>
+        /// <param name="parameters">Find parameters</param>
+        /// <returns>Asynchronous task, which returns structure containing the details of the IBAN assigned to the logged in account.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedIbans> FindIbansAsync(IbanFindParameters parameters)
+        {
+            ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
+
+            return await RequestAsync<PaginatedIbans>("/v2/ibans", HttpMethod.Get, optional);
+        }
+
+        /// <summary>
+        /// Find IBANs of the sub-accounts linked to the logged in account.
+        /// </summary>
+        /// <param name="parameters">Find parameters</param>
+        /// <returns>Asynchronous task, which returns structure containing the details of the IBAN assigned to the sub-accounts.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedIbans> FindSubAccountsIbansAsync(IbanFindParameters parameters)
+        {
+            ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
+
+            return await RequestAsync<PaginatedIbans>("/v2/ibans/subaccounts/find", HttpMethod.Get, optional);
+        }
+
+        /// <summary>
+        /// Retrieve IBAN of the sub-account.
+        /// </summary>
+        /// <param name="id">Sub-Account ID</param>
+        /// <returns>Asynchronous task, which returns structure containing the details of the IBAN assigned to the sub-accounts.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedIbans> GetSubAccountsIbansAsync(string id)
+        {
+            return await RequestAsync<PaginatedIbans>("/v2/ibans/subaccounts/" + id, HttpMethod.Get, null);
         }
 
         #endregion
@@ -1008,6 +1052,94 @@ namespace CurrencyCloud
             ParamsObject optional = parameters == null ? null : ParamsObject.CreateFromStaticObject(parameters);
 
             return await RequestAsync<PaginatedTransactions>("/v2/transactions/find", HttpMethod.Get, optional);
+        }
+
+        #endregion
+
+        #region Transfers
+
+        /// <summary>
+        /// Creates a new Transfer.
+        /// </summary>
+        /// <param name="transfer">Data object for new Transfer</param>
+        /// <returns>Asynchronous task, which returns newly created conversion.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<Transfer> CreateTransferAsync(Transfer transfer)
+        {
+            var paramsObj = ParamsObject.CreateFromStaticObject(transfer);
+
+            return await RequestAsync<Transfer>("/v2/transfers/create", HttpMethod.Post, paramsObj);
+        }
+
+        /// <summary>
+        /// Gets details of a transfer.
+        /// </summary>
+        /// <param name="id">Id of the requested conversion.</param>
+        /// <returns>Asynchronous task, which returns the requested conversion.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<Transfer> GetTransferAsync(string id)
+        {
+            return await RequestAsync<Transfer>("/v2/transfers/" + id, HttpMethod.Get, null);
+        }
+
+        /// <summary>
+        /// Find all Transfers matching the given search criteria
+        /// </summary>
+        /// <param name="parameters">Find parameters</param>
+        /// <returns>Asynchronous task, which returns structure containing the details of the IBAN assigned to the logged in account.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedTransfers> FindTransfersAsync(TransferFindParameters parameters = null)
+        {
+            ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
+
+            return await RequestAsync<PaginatedTransfers>("/v2/transfers/find", HttpMethod.Get, optional);
+        }
+
+        #endregion
+
+        #region VirtualAccounts
+
+        /// <summary>
+        /// Find Virtual Accounts assigned to the logged in account.
+        /// </summary>
+        /// <param name="parameters">Find parameters</param>
+        /// <returns>Asynchronous task, which returns the details of the Virtual Accounts assigned to the logged in account.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedVirtualAccounts> FindVirtualAccountsAsync(FindParameters parameters)
+        {
+            ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
+
+            return await RequestAsync<PaginatedVirtualAccounts>("/v2/virtual_accounts", HttpMethod.Get, optional);
+        }
+
+        /// <summary>
+        /// Find Virtual Accounts of the sub-accounts linked to the logged in account.
+        /// </summary>
+        /// <param name="parameters">Find parameters</param>
+        /// <returns>Asynchronous task, which returns the details of the Virtual Accounts assigned to the sub-accounts.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedVirtualAccounts> FindSubAccountsVirtualAccountsAsync(FindParameters parameters)
+        {
+            ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
+
+            return await RequestAsync<PaginatedVirtualAccounts>("/v2/virtual_accounts/subaccounts/find", HttpMethod.Get, optional);
+        }
+
+        /// <summary>
+        /// Retrieve Virtual Accounts of the sub-account.
+        /// </summary>
+        /// <param name="id">Sub-Account ID</param>
+        /// <returns>Asynchronous task, which returns the details of the Virtual Accounts assigned to the sub-accounts.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedVirtualAccounts> GetSubAccountVirtualAccountsAsync(string id)
+        {
+            return await RequestAsync<PaginatedVirtualAccounts>("/v2/virtual_accounts/subaccounts/" + id, HttpMethod.Get, null);
         }
 
         #endregion
