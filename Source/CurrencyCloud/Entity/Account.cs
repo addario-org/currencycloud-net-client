@@ -18,7 +18,7 @@ namespace CurrencyCloud.Entity
         internal Account() { }
 
         /// <summary>
-        /// ID of the account 
+        /// ID of the account
         /// </summary>
         public string Id { get; set; }
 
@@ -100,11 +100,21 @@ namespace CurrencyCloud.Entity
 
         ///<summary>
         /// Identification value based on the identification document type. Required if identification_type is set
-        ///</summary>        
+        ///</summary>
         [Param]
         public string IdentificationValue { get; set; }
 
         public string ShortReference { get; set; }
+
+        public bool ApiTrading { get; set; }
+
+        public bool OnlineTrading { get; set; }
+
+        public bool PhoneTrading { get; set; }
+
+        public bool ProcessThirdPartyFunds { get; set; }
+
+        public string SettlementType { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -131,8 +141,12 @@ namespace CurrencyCloud.Entity
                    UpdatedAt == account.UpdatedAt &&
                    IdentificationType == account.IdentificationType &&
                    IdentificationValue == account.IdentificationValue &&
-                   ShortReference == account.ShortReference;
-
+                   ShortReference == account.ShortReference &&
+                   ApiTrading == account.ApiTrading &&
+                   OnlineTrading == account.OnlineTrading &&
+                   PhoneTrading == account.PhoneTrading &&
+                   ProcessThirdPartyFunds == account.ProcessThirdPartyFunds &&
+                   SettlementType == account.SettlementType;
         }
 
         public override int GetHashCode()

@@ -61,6 +61,10 @@ namespace CurrencyCloud.Tests
             Assert.AreEqual(account1.Country, created.Country);
             Assert.AreEqual(account1.SpreadTable, created.SpreadTable);
             Assert.AreEqual(account1.IdentificationType, created.IdentificationType);
+            Assert.AreEqual(account1.Brand, created.Brand);
+            Assert.AreEqual(account1.ApiTrading, created.ApiTrading);
+            Assert.AreEqual(account1.OnlineTrading, created.OnlineTrading);
+            Assert.AreEqual(account1.PhoneTrading, created.PhoneTrading);
         }
 
         /// <summary>
