@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace CurrencyCloud.Entity
 {
@@ -14,8 +15,8 @@ namespace CurrencyCloud.Entity
             this.Country = country;
         }
 
-        [Newtonsoft.Json.JsonConstructor]
-        internal Account() { }
+        [JsonConstructor]
+        public Account() { }
 
         /// <summary>
         /// ID of the account
@@ -88,9 +89,9 @@ namespace CurrencyCloud.Entity
         [Param]
         public string SpreadTable { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         ///<summary>
         /// Type of the identification document. One of 'none', 'drivers_license', 'social_security_number', 'green_card', 'passport', 'visa', 'matricula_consular', 'registro_federal_de_contribuyentes', 'credential_de_elector', 'social_insurance_number', 'citizenship_papers', 'drivers_license_canadian', 'existing_credit_card_details', 'employer_identification_number', 'national_id', 'others' or 'incorporation_number'
@@ -106,15 +107,51 @@ namespace CurrencyCloud.Entity
 
         public string ShortReference { get; set; }
 
-        public bool ApiTrading { get; set; }
+        [Param]
+        public bool? ApiTrading { get; set; }
 
-        public bool OnlineTrading { get; set; }
+        [Param]
+        public bool? OnlineTrading { get; set; }
 
-        public bool PhoneTrading { get; set; }
+        [Param]
+        public bool? PhoneTrading { get; set; }
 
-        public bool ProcessThirdPartyFunds { get; set; }
+        public bool? ProcessThirdPartyFunds { get; set; }
 
         public string SettlementType { get; set; }
+
+        public string ToJSON()
+        {
+            var obj = new[]
+            {
+                new
+                {
+                    Id,
+                    AccountName,
+                    Brand,
+                    YourReference,
+                    Status,
+                    Street,
+                    City,
+                    StateOrProvince,
+                    Country,
+                    PostalCode,
+                    SpreadTable,
+                    LegalEntityType,
+                    CreatedAt,
+                    UpdatedAt,
+                    IdentificationType,
+                    IdentificationValue,
+                    ShortReference,
+                    ApiTrading,
+                    OnlineTrading,
+                    PhoneTrading,
+                    ProcessThirdPartyFunds,
+                    SettlementType
+                }
+            };
+            return JsonConvert.SerializeObject(obj);
+        }
 
         public override bool Equals(object obj)
         {

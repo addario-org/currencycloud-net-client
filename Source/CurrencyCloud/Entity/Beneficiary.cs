@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace CurrencyCloud.Entity
 {
@@ -15,8 +16,8 @@ namespace CurrencyCloud.Entity
             this.Name = name;
         }
 
-        [Newtonsoft.Json.JsonConstructor]
-        internal Beneficiary() { }
+        [JsonConstructor]
+        public Beneficiary() { }
 
         /// <summary>
         /// ID of the beneficiary
@@ -45,7 +46,7 @@ namespace CurrencyCloud.Entity
         /// Priority or regular
         ///</summary>
         [Param]
-        public List<string> PaymentTypes { get; set; }
+        public string[] PaymentTypes { get; set; }
 
         ///<summary>
         /// Address of beneficiary
@@ -105,7 +106,7 @@ namespace CurrencyCloud.Entity
         /// Beneficiary date of birth(company creation date when beneficiary_entity_type is company)
         ///</summary>
         [Param]
-        public DateTime BeneficiaryDateOfBirth { get; set; }
+        public DateTime? BeneficiaryDateOfBirth { get; set; }
 
         ///<summary>
         /// Type of the identification document. One of 'none', 'drivers_license', 'social_security_number', 'green_card', 'passport', 'visa', 'matricula_consular', 'registro_federal_de_contribuyentes', 'credential_de_elector', 'social_insurance_number', 'citizenship_papers', 'drivers_license_canadian', 'existing_credit_card_details', 'employer_identification_number', 'national_id', 'others' or 'incorporation_number'
@@ -122,7 +123,6 @@ namespace CurrencyCloud.Entity
         ///<summary>
         /// External reference for the beneficiary
         ///</summary>
-        [Param]
         public string BeneficiaryExternalReference { get; set; }
 
         ///<summary>
@@ -195,7 +195,7 @@ namespace CurrencyCloud.Entity
         /// boolean
         ///</summary>
         [Param]
-        public bool DefaultBeneficiary { get; set; }
+        public bool? DefaultBeneficiary { get; set; }
 
         [Param]
         public string CreatorContactId { get; set; }
@@ -206,9 +206,54 @@ namespace CurrencyCloud.Entity
         [Param]
         public List<string> BankAddress { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+
+        public string ToJSON()
+        {
+            var obj = new[]
+            {
+                new
+                {
+                    Id,
+                    BankAccountHolderName,
+                    Name,
+                    Email,
+                    PaymentTypes,
+                    BeneficiaryAddress,
+                    BeneficiaryCountry,
+                    BeneficiaryEntityType,
+                    BeneficiaryCompanyName,
+                    BeneficiaryFirstName,
+                    BeneficiaryLastName,
+                    BeneficiaryCity,
+                    BeneficiaryPostcode,
+                    BeneficiaryStateOrProvince,
+                    BeneficiaryDateOfBirth,
+                    BeneficiaryIdentificationType,
+                    BeneficiaryIdentificationValue,
+                    BankCountry,
+                    BankName,
+                    BankAccountType,
+                    Currency,
+                    AccountNumber,
+                    RoutingCodeType1,
+                    RoutingCodeValue1,
+                    RoutingCodeType2,
+                    RoutingCodeValue2,
+                    BicSwift,
+                    Iban,
+                    DefaultBeneficiary,
+                    CreatorContactId,
+                    BankAddress,
+                    CreatedAt,
+                    UpdatedAt,
+                    BeneficiaryExternalReference
+                }
+            };
+            return JsonConvert.SerializeObject(obj);
+        }
 
         public override bool Equals(object obj)
         {

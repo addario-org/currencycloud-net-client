@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Common;
+using Newtonsoft.Json;
 
 namespace CurrencyCloud.Entity
 {
@@ -13,12 +13,11 @@ namespace CurrencyCloud.Entity
             this.Amount = amount;
         }
 
-        [Newtonsoft.Json.JsonConstructor]
-        internal Transfer() { }
+        [JsonConstructor]
+        public Transfer() { }
 
         public string Id { get; set; }
 
-        [Param]
         public string ShortReference { get; set; }
 
         [Param]
@@ -31,23 +30,46 @@ namespace CurrencyCloud.Entity
         public string Currency { get; set; }
 
         [Param]
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
 
         [Param]
         public string Status { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
-        public DateTime CompletedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
 
         public string CreatorAccountId { get; set; }
 
         public string CreatorContactId { get; set; }
 
-        [Param]
         public string Reason { get; set; }
+
+        public string ToJSON()
+        {
+            var obj = new[]
+            {
+                new
+                {
+                    Id,
+                    ShortReference,
+                    SourceAccountId,
+                    DestinationAccountId,
+                    Currency,
+                    Amount,
+                    Status,
+                    Reason,
+                    CreatedAt,
+                    UpdatedAt,
+                    CompletedAt,
+                    CreatorAccountId,
+                    CreatorContactId
+                }
+            };
+            return JsonConvert.SerializeObject(obj);
+        }
 
         public override bool Equals(object obj)
         {

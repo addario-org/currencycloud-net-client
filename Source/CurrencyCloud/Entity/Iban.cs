@@ -1,11 +1,12 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace CurrencyCloud.Entity
 {
     public class Iban : Entity
     {
-        [Newtonsoft.Json.JsonConstructor]
-        internal Iban() { }
+        [JsonConstructor]
+        public Iban() { }
 
         /// <summary>
         /// Id of the IBAN
@@ -56,12 +57,34 @@ namespace CurrencyCloud.Entity
         /// <summary>
         /// IBAN Created At
         /// </summary>
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         /// <summary>
         /// IBAN Updated At
         /// </summary>
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+
+        public string ToJSON()
+        {
+            var obj = new[]
+            {
+                new
+                {
+                    Id,
+                    AccountId,
+                    IbanCode,
+                    Currency,
+                    AccountHolderName,
+                    BankInstitutionName,
+                    BankInstitutionAddress,
+                    BankInstitutionCountry,
+                    BicSwift,
+                    CreatedAt,
+                    UpdatedAt
+                }
+            };
+            return JsonConvert.SerializeObject(obj);
+        }
 
         public override bool Equals(object obj)
         {

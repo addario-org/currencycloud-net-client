@@ -1,9 +1,12 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace CurrencyCloud.Entity
 {
     public class DetailedRates
     {
+        public DetailedRates() { }
+
         public DetailedRates(string buyCurrency, string sellCurrency, string fixedSide, decimal amount)
         {
             this.BuyCurrency = buyCurrency;
@@ -34,12 +37,28 @@ namespace CurrencyCloud.Entity
         /// The amount to 2 decimal places
         ///</summary>
         [Param]
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
 
         ///<summary>
         /// The date you want the bought currency to be available
         ///</summary>
         [Param]
         public DateTime? ConversionDate { get; set; }
+
+        public string ToJSON()
+        {
+            var obj = new[]
+            {
+                new
+                {
+                    BuyCurrency,
+                    SellCurrency,
+                    FixedSide,
+                    Amount,
+                    ConversionDate
+                }
+            };
+            return JsonConvert.SerializeObject(obj);
+        }
     }
 }
