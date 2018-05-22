@@ -7,7 +7,7 @@ namespace CurrencyCloud.Entity
 
         ///<summary>
         /// Amount of balances to 2dp
-        ///</summary>        
+        ///</summary>
         [Param]
         public decimal? AmountFrom { get; set; }
 
@@ -22,7 +22,7 @@ namespace CurrencyCloud.Entity
         ///</summary>
         [Param]
         public DateTime? AsAtDate { get; set; }
-        
+
         ///<summary>
         /// Controls the search of balances at all account levels. Defaults to own.
         /// own: allows to search balances on the main account

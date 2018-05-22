@@ -7,7 +7,7 @@ namespace CurrencyCloud.Entity
 
         ///<summary>
         /// Bank account holder's name
-        ///</summary>        
+        ///</summary>
         [Param]
         public string BankAccountHolderName { get; set; }
 
@@ -16,12 +16,6 @@ namespace CurrencyCloud.Entity
         ///</summary>
         [Param]
         public string Name { get; set; }
-
-        ///<summary>
-        /// Priority or regular
-        ///</summary>
-        [Param]
-        public string PaymentTypes { get; set; }
 
         ///<summary>
         /// A two-letter country code as defined in ISO 3166-1 that defines the beneficiary's country
@@ -130,7 +124,7 @@ namespace CurrencyCloud.Entity
         ///</summary>
         [Param]
         public bool? DefaultBeneficiary { get; set; }
-        
+
         ///<summary>
         /// Controls the search of beneficiaries at all account levels. Defaults to own.
         /// own: allows to search beneficiary on the main account
