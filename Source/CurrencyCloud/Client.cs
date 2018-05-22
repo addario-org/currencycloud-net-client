@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
@@ -102,6 +103,7 @@ namespace CurrencyCloud
 
             Func<Task<TResult>> requestAsyncDelegate = async () =>
             {
+                Debug.WriteLine(httpClient.BaseAddress + " " + method.Method + " -> " + requestUri);
                 HttpRequestMessage httpRequestMessage = null;
                 if (method == HttpMethod.Get)
                 {
@@ -310,7 +312,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the list of the found accounts, as well as pagination information.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedAccounts> FindAccountsAsync(AccountFindParameters parameters)
+        public async Task<PaginatedAccounts> FindAccountsAsync(AccountFindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -351,7 +353,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the list of the found balances, as well as pagination information.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedBalances> FindBalancesAsync(BalanceFindParameters parameters)
+        public async Task<PaginatedBalances> FindBalancesAsync(BalanceFindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -369,6 +371,14 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the validated beneficiary.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<Beneficiary> ValidateBeneficiaryAsync(Beneficiary beneficiary)
+        {
+            var paramsObj = ParamsObject.CreateFromStaticObject(beneficiary);
+
+            return await RequestAsync<Beneficiary>("/v2/beneficiaries/validate", HttpMethod.Post, paramsObj);
+        }
+
+        [Obsolete("Method ValidateBeneficiaryAsync(BeneficiaryValidateParameters) is deprecated. Use ValidateBeneficiaryAsync(Beneficiary) instead", false)]
         public async Task<Beneficiary> ValidateBeneficiaryAsync(BeneficiaryValidateParameters validateParameters)
         {
             var paramsObj = ParamsObject.CreateFromStaticObject(validateParameters);
@@ -429,7 +439,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the list of the found beneficiaries, as well as pagination information.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedBeneficiaries> FindBeneficiariesAsync(BeneficiaryFindParameters parameters)
+        public async Task<PaginatedBeneficiaries> FindBeneficiariesAsync(BeneficiaryFindParameters parameters = null)
         {
             var optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -508,7 +518,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the list of the found contacts, as well as pagination information.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedContacts> FindContactsAsync(ContactFindParameters parameters)
+        public async Task<PaginatedContacts> FindContactsAsync(ContactFindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -563,7 +573,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the list of the found conversions, as well as pagination information.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedConversions> FindConversionsAsync(ConversionFindParameters parameters)
+        public async Task<PaginatedConversions> FindConversionsAsync(ConversionFindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -581,7 +591,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns structure containing the details of the IBAN assigned to the logged in account.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedIbans> FindIbansAsync(IbanFindParameters parameters)
+        public async Task<PaginatedIbans> FindIbansAsync(IbanFindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -595,7 +605,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns structure containing the details of the IBAN assigned to the sub-accounts.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedIbans> FindSubAccountsIbansAsync(IbanFindParameters parameters)
+        public async Task<PaginatedIbans> FindSubAccountsIbansAsync(IbanFindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -720,7 +730,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns  the list of the found payments, as well as pagination information.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedPayments> FindPaymentsAsync(FindParameters parameters)
+        public async Task<PaginatedPayments> FindPaymentsAsync(FindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -746,9 +756,9 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the MT103 information for a SWIFT payment.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<Payment> RetrievePaymentSubmissionAsync(string id)
+        public async Task<Payment> GetPaymentSubmissionAsync(string id)
         {
-            return await RequestAsync<Payment>("/v2/payments/" + id + "/submission", HttpMethod.Post, null);
+            return await RequestAsync<Payment>("/v2/payments/" + id + "/submission", HttpMethod.Get, null);
         }
 
         #endregion
@@ -903,7 +913,12 @@ namespace CurrencyCloud
                 optional.AddNotNull("PaymentType", paymentType);
             }
 
-            return await RequestAsync<PayerDetailsList>("/v2/reference/payer_required_details", HttpMethod.Get, optional);
+            var paramsObj = new ParamsObject();
+            paramsObj.Add("PayerCountry", payerCountry);
+            paramsObj.AddNotNull("PayerEntityType", payerEntityType);
+            paramsObj.AddNotNull("PaymentType", paymentType);
+
+            return await RequestAsync<PayerDetailsList>("/v2/reference/payer_required_details", HttpMethod.Get, paramsObj);
         }
 
         #endregion
@@ -948,7 +963,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns  the list of the found settlements, as well as pagination information.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedSettlements> FindSettlementsAsync(SettlementFindParameters parameters)
+        public async Task<PaginatedSettlements> FindSettlementsAsync(SettlementFindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -1109,7 +1124,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the details of the Virtual Accounts assigned to the logged in account.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedVirtualAccounts> FindVirtualAccountsAsync(FindParameters parameters)
+        public async Task<PaginatedVirtualAccounts> FindVirtualAccountsAsync(FindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -1123,7 +1138,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the details of the Virtual Accounts assigned to the sub-accounts.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedVirtualAccounts> FindSubAccountsVirtualAccountsAsync(FindParameters parameters)
+        public async Task<PaginatedVirtualAccounts> FindSubAccountsVirtualAccountsAsync(FindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
