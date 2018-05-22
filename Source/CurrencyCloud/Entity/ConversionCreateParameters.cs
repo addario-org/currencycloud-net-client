@@ -2,7 +2,7 @@
 
 namespace CurrencyCloud.Entity
 {
-    [Obsolete("Class ConversionCreate is deprecated. Use a Conversion object instead setting its properties to appropiate values", false)]
+    [Obsolete("Class ConversionCreate is deprecated. Use a Conversion object instead, setting its properties to appropiate values", false)]
     public class ConversionCreate
     {
         public ConversionCreate(string buyCurrency, string sellCurrency, string fixedSide, decimal amount, bool termAgreement, string uniqueRequestId)

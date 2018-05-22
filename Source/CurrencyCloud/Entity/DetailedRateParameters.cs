@@ -2,7 +2,7 @@
 
 namespace CurrencyCloud.Entity
 {
-    [Obsolete("Class DetailedRateParameters is deprecated. Use a DetailedRates instead", false)]
+    [Obsolete("Class DetailedRateParameters is deprecated. Use a DetailedRates object instead, setting its properties to appropiate values", false)]
     public class DetailedRateParameters
     {
         public DetailedRateParameters(string buyCurrency, string sellCurrency, string fixedSide, decimal amount)

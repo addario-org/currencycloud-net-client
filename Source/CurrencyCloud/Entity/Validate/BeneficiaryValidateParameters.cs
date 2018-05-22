@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace CurrencyCloud.Entity
 {
+    [Obsolete("Class BeneficiaryValidateParameters is deprecated. Use a Beneficiary.Create() object instead setting its properties to appropiate values", false)]
     public class BeneficiaryValidateParameters
     {
         public BeneficiaryValidateParameters(string bankCountry, string currency)
@@ -12,19 +13,19 @@ namespace CurrencyCloud.Entity
         }
 
         /// <summary>
-        /// Bank account holder's name 
+        /// Bank account holder's name
         /// </summary>
         [Param]
         public string BankAccountHolderName { get; set; }
 
         /// <summary>
-        /// Nickname for beneficiary 
+        /// Nickname for beneficiary
         /// </summary>
         [Param]
         public string Name { get; set; }
 
         /// <summary>
-        /// Email address of beneficiary 
+        /// Email address of beneficiary
         /// </summary>
         [Param]
         public string Email { get; set; }
@@ -36,7 +37,7 @@ namespace CurrencyCloud.Entity
         public List<string> PaymentTypes { get; set; }
 
         /// <summary>
-        /// Address of beneficiary 
+        /// Address of beneficiary
         /// </summary>
         [Param]
         public List<string> BeneficiaryAddress { get; set; }
