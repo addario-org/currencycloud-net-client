@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CurrencyCloud, Version=2.1.5.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="CurrencyCloud, Version=2.1.5, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\Lib\DotNet\CurrencyCloud\Debug\CurrencyCloud.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />

@@ -32,7 +32,7 @@ namespace CurrencyCloud
         private HttpClient httpClient;
         private Credentials credentials;
         private string onBehalfOf;
-        private string userAgent = "CurrencyCloudSDK/2.0 .NET/0.10.4.0";
+        private string userAgent = "CurrencyCloudSDK/2.0 .NET/2.1.5";
 
         internal string Token
         {
