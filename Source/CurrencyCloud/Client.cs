@@ -4,11 +4,14 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -18,7 +21,9 @@ using CurrencyCloud.Exception;
 using CurrencyCloud.Environment;
 using CurrencyCloud.Entity.Pagination;
 using CurrencyCloud.Entity.List;
-using System.Runtime.CompilerServices;
+using Polly;
+using Polly.Retry;
+
 
 [assembly: InternalsVisibleTo("Currencycloud.Tests")]
 
@@ -32,7 +37,7 @@ namespace CurrencyCloud
         private HttpClient httpClient;
         private Credentials credentials;
         private string onBehalfOf;
-        private string userAgent = "CurrencyCloudSDK/2.0 .NET/2.2.1";
+        private const string userAgent = "CurrencyCloudSDK/2.0 .NET/2.4.3";
 
         internal string Token
         {
@@ -46,6 +51,58 @@ namespace CurrencyCloud
                 httpClient.DefaultRequestHeaders.Add("X-Auth-Token", value);
             }
         }
+
+        #region Retry
+
+        private static TimeSpan backoffWait(int attempt, int min, int max, int jitter)
+        {
+            var wait = TimeSpan.FromMilliseconds(min * Math.Pow(2, attempt))
+                       + TimeSpan.FromMilliseconds(new Random().Next(jitter));
+
+            Debug.WriteLine("[Backoff] - Waiting {0} ms before retrying. {1} retries left", wait.TotalMilliseconds, Retry.NumRetries - attempt);
+
+            if (wait.TotalMilliseconds <= min)
+                return TimeSpan.FromMilliseconds(min);
+
+            return wait.TotalMilliseconds > max ? TimeSpan.FromMilliseconds(max) : wait;
+        }
+
+        private static HttpRequestMessage CloneHttpRequestMessage(HttpRequestMessage req)
+        {
+            HttpRequestMessage clone = new HttpRequestMessage(req.Method, req.RequestUri);
+
+            var ms = new MemoryStream();
+            if (req.Content != null)
+            {
+                req.Content.CopyToAsync(ms).ConfigureAwait(false);
+                ms.Position = 0;
+                clone.Content = new StreamContent(ms);
+
+                if (req.Content.Headers != null)
+                    foreach (var h in req.Content.Headers)
+                        clone.Content.Headers.Add(h.Key, h.Value);
+            }
+
+            clone.Version = req.Version;
+
+            foreach (KeyValuePair<string, object> prop in req.Properties)
+                clone.Properties.Add(prop);
+
+            foreach (KeyValuePair<string, IEnumerable<string>> header in req.Headers)
+                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+
+            return clone;
+        }
+
+        private static RetryPolicy<HttpResponseMessage> retryPolicy = Policy<HttpResponseMessage>
+            .Handle<HttpRequestException>()
+            .OrResult(res => Retry.OnError.Contains(res.StatusCode))
+            .WaitAndRetryAsync(
+                Retry.NumRetries,
+                attempt => backoffWait(attempt, Retry.MinWait, Retry.MaxWait, Retry.Jitter),
+                (err, delay) => Debug.WriteLine("[Retry Policy] - Delaying for {0} ms.", delay.TotalMilliseconds));
+
+        #endregion
 
         #region Request
 
@@ -61,7 +118,16 @@ namespace CurrencyCloud
             {
                 Content = authParams.buildFormUrlBodyFromParams()
             };
-            HttpResponseMessage res = await httpClient.SendAsync(httpAuthRequestMessage);
+
+            if (Retry.Enabled)
+                Debug.WriteLine("[Retrying authentication] - Retries: {0}, MinWait: {1}, MaxWait: {2}, Jitter: {3}",
+                    Retry.NumRetries, Retry.MinWait, Retry.MaxWait, Retry.Jitter);
+
+            HttpResponseMessage res = Retry.Enabled ?
+                await retryPolicy.ExecuteAsync(
+                    ct => httpClient.SendAsync(CloneHttpRequestMessage(httpAuthRequestMessage)), CancellationToken.None) :
+                await httpClient.SendAsync(httpAuthRequestMessage);
+
             if (res.IsSuccessStatusCode)
             {
                 string resString = await res.Content.ReadAsStringAsync();
@@ -74,10 +140,8 @@ namespace CurrencyCloud
 
                 return token;
             }
-            else
-            {
-                throw await ApiExceptionFactory.FromHttpResponse(res);
-            }
+
+            throw await ApiExceptionFactory.FromHttpResponse(res);
         }
 
         private async Task<TResult> RequestAsync<TResult>(string path, HttpMethod method, ParamsObject obj = null)
@@ -108,13 +172,24 @@ namespace CurrencyCloud
                 if (method == HttpMethod.Get)
                 {
                     httpRequestMessage = new HttpRequestMessage(method, requestUri);
-                } else {
+                }
+                else
+                {
                     httpRequestMessage = new HttpRequestMessage(method, path)
                     {
                         Content = paramsObj.buildFormUrlBodyFromParams()
                     };
                 }
-                HttpResponseMessage res = await httpClient.SendAsync(httpRequestMessage);
+
+                if (Retry.Enabled)
+                    Debug.WriteLine("[Retrying request] - Retries: {0}, MinWait: {1}, MaxWait: {2}, Jitter: {3}",
+                        Retry.NumRetries, Retry.MinWait, Retry.MaxWait, Retry.Jitter);
+
+                HttpResponseMessage res = Retry.Enabled ?
+                    await retryPolicy.ExecuteAsync(
+                        ct => httpClient.SendAsync(CloneHttpRequestMessage(httpRequestMessage)), CancellationToken.None) :
+                    await httpClient.SendAsync(httpRequestMessage);
+
                 if (res.IsSuccessStatusCode)
                 {
                     string resString = await res.Content.ReadAsStringAsync();
@@ -127,10 +202,8 @@ namespace CurrencyCloud
 
                     return JsonConvert.DeserializeObject<TResult>(resString, serializerSettings);
                 }
-                else
-                {
-                    throw await ApiExceptionFactory.FromHttpResponse(res);
-                }
+
+                throw await ApiExceptionFactory.FromHttpResponse(res);
             };
 
             for (int attempts = 0;; attempts++)
