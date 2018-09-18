@@ -192,5 +192,6 @@ namespace CurrencyCloud.Tests
                 Assert.IsInstanceOf(typeof(NotFoundException), ex);
             }
         }
+
     }
 }

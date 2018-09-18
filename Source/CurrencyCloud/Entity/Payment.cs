@@ -73,6 +73,12 @@ namespace CurrencyCloud.Entity
         ///</summary>
         [Param]
         public string Reason { get; set; }
+        
+        ///<summary>
+        /// Purpose code for payment
+        ///</summary>
+        [Param]
+        public string PurposeCode { get; set; }
 
         ///<summary>
         /// ISO 8601 Date when the payment should be paid
@@ -92,6 +98,7 @@ namespace CurrencyCloud.Entity
 
         public string PayerId { get; set; }
 
+        [Param]
         public string UniqueRequestId { get; set; }
 
         ///<summary>
@@ -139,7 +146,8 @@ namespace CurrencyCloud.Entity
                     PaymentGroupId,
                     UniqueRequestId,
                     FailureReturnedAmount,
-                    UltimateBeneficiaryName
+                    UltimateBeneficiaryName,
+                    PurposeCode
                 }
             };
             return JsonConvert.SerializeObject(obj);
@@ -177,7 +185,8 @@ namespace CurrencyCloud.Entity
                    PaymentGroupId == payment.PaymentGroupId &&
                    FailureReturnedAmount == payment.FailureReturnedAmount &&
                    UniqueRequestId == payment.UniqueRequestId &&
-                   UltimateBeneficiaryName == payment.UltimateBeneficiaryName;
+                   UltimateBeneficiaryName == payment.UltimateBeneficiaryName &&
+                   PurposeCode == payment.PurposeCode;
         }
 
         public override int GetHashCode()

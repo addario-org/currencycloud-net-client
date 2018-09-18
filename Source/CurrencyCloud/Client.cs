@@ -996,6 +996,23 @@ namespace CurrencyCloud
             return await RequestAsync<PaymentSubmission>("/v2/payments/" + id + "/submission", HttpMethod.Get, null);
         }
 
+        /// <summary>
+        /// Returns an array of PaymentAuthorisation Objects
+        /// </summary>
+        /// <param name="payment_ids[]">Payment Ids Array</param>
+        /// <returns>Asynchronous task, which returns an array of PaymentAuthorisation Objects</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaymentAuthorisation[]> PaymentAuthorisationAsync(string[] payment_ids)
+        {
+            if (payment_ids.Length < 1)
+                throw new ArgumentException("Payment IDs can not be null");
+
+            ParamsObject paramsObj = ParamsObject.CreateFromStaticObject(payment_ids);
+
+            return await RequestAsync<PaymentAuthorisation[]>("/v2/payments/authorise", HttpMethod.Post, paramsObj);
+        }
+
         #endregion
 
         #region Rates
@@ -1088,6 +1105,25 @@ namespace CurrencyCloud
         public async Task<CurrenciesList> GetAvailableCurrenciesAsync()
         {
             return await RequestAsync<CurrenciesList>("/v2/reference/currencies", HttpMethod.Get);
+        }
+
+        /// <summary>
+        /// Gets a list of purpose codes for a given currency.
+        /// </summary>
+        /// <param name="currency">Currency to get the purpose codes for</param>
+        /// <param name="entityType">Optional: entity (individual or company)</param>
+        /// <param name="bankAccountCountry">Optional: bank account country</param>
+        /// <returns>Asynchronous task, which returns the list purpose codes.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaymentPurposeCodeList> GetPaymentPurposeCodes(string currency, string bankAccountCountry, string entityType = null)
+        {
+            var paramsObj = new ParamsObject();
+            paramsObj.Add("Currency", currency);
+            paramsObj.Add("BankAccountCountry", bankAccountCountry);
+            paramsObj.AddNotNull("EntityType", entityType);
+
+            return await RequestAsync<PaymentPurposeCodeList>("/v2/reference/payment_purpose_codes", HttpMethod.Get, paramsObj);
         }
 
         /// <summary>
