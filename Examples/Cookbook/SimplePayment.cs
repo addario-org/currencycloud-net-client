@@ -1,4 +1,4 @@
-﻿/**
+/**
  * This is a C# implementation of the Currencycloud API v2.0 Cookbook example available at
  * https://www.currencycloud.com/developers/cookbooks/
  *
@@ -24,13 +24,13 @@ namespace Cookbook
         {
             Console.WriteLine("*** Simple Payment ***");
             MainAsync().Wait();
-
-            Console.Write("Simple Payment Cookbook done! Press <Enter> to continue... ");
-            while (Console.ReadKey().Key != ConsoleKey.Enter) {}
         }
 
         private static async Task MainAsync()
         {
+            Retry.Enabled = true;
+            Retry.NumRetries = 5;
+
             var client = new Client();
             var isAuthenticated = false;
 
@@ -176,6 +176,8 @@ namespace Cookbook
                     await client.CloseAsync();
                     Console.WriteLine("Logout\n");
                 }
+
+                Retry.Enabled = false;
             }
         }
     }

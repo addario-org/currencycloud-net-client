@@ -8,7 +8,6 @@
  * If you have any queries or you require support, please contact our Support team at
  * support@currencycloud.com
  */
-using System;
 
 namespace Cookbook
 {
@@ -28,10 +27,6 @@ namespace Cookbook
             ConvertFunds.Run();
             PayBeneficiary.Run();
             SimplePayment.Run();
-
-            Console.Write("All Cookbook recipes done! Press <Enter> to exit... ");
-            while (Console.ReadKey().Key != ConsoleKey.Enter) {}
         }
-
     }
 }
