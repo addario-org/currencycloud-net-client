@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -36,7 +36,7 @@ namespace CurrencyCloud
         private HttpClient httpClient;
         private Credentials credentials;
         private string onBehalfOf;
-        private const string userAgent = "CurrencyCloudSDK/2.0 .NET/2.4.5";
+        private const string userAgent = "CurrencyCloudSDK/2.0 .NET/3.0.1";
 
         internal string Token
         {
@@ -58,7 +58,8 @@ namespace CurrencyCloud
             var wait = TimeSpan.FromMilliseconds(min * Math.Pow(2, attempt))
                        + TimeSpan.FromMilliseconds(new Random().Next(jitter));
 
-            Debug.WriteLine("[Backoff] - Waiting {0} ms before retrying. {1} retries left", wait.TotalMilliseconds, Retry.NumRetries - attempt);
+            Debug.WriteLine("UTC: {0} - Backoff & Retry - Waiting {1}ms before retrying. {2} retries left",
+                DateTime.UtcNow, wait.TotalMilliseconds, Retry.NumRetries - attempt);
 
             if (wait.TotalMilliseconds <= min)
                 return TimeSpan.FromMilliseconds(min);
@@ -99,7 +100,8 @@ namespace CurrencyCloud
             .WaitAndRetryAsync(
                 Retry.NumRetries,
                 attempt => backoffWait(attempt, Retry.MinWait, Retry.MaxWait, Retry.Jitter),
-                (err, delay) => Debug.WriteLine("[Retry Policy] - Delaying for {0} ms.", delay.TotalMilliseconds));
+                (err, delay) => Debug.WriteLine("UTC: {0} - Retry Policy - Delaying for {1}ms.",
+                    DateTime.UtcNow, delay.TotalMilliseconds));
 
         #endregion
 
@@ -107,7 +109,7 @@ namespace CurrencyCloud
 
         private async Task<string> AuthorizeAsync()
         {
-            string requestUri = string.Format("/v2/authenticate/api");
+            string requestUri = "/v2/authenticate/api";
 
             ParamsObject authParams = new ParamsObject();
             authParams.Add("login_id", credentials.LoginId);
@@ -119,8 +121,8 @@ namespace CurrencyCloud
             };
 
             if (Retry.Enabled)
-                Debug.WriteLine("[Retrying authentication] - Retries: {0}, MinWait: {1}, MaxWait: {2}, Jitter: {3}",
-                    Retry.NumRetries, Retry.MinWait, Retry.MaxWait, Retry.Jitter);
+                Debug.WriteLine("UTC: {0} - Retrying authentication - Retries: {1}, MinWait: {2}, MaxWait: {3}, Jitter: {4}",
+                    DateTime.UtcNow, Retry.NumRetries, Retry.MinWait, Retry.MaxWait, Retry.Jitter);
 
             HttpResponseMessage res = Retry.Enabled ?
                 await retryPolicy.ExecuteAsync(
@@ -166,7 +168,9 @@ namespace CurrencyCloud
 
             Func<Task<TResult>> requestAsyncDelegate = async () =>
             {
-                Debug.WriteLine(httpClient.BaseAddress + " " + method.Method + " -> " + requestUri);
+                Debug.WriteLine("UTC: {0} - HTTP {1} Request - {2}{3}?{4}",
+                    DateTime.UtcNow, method.Method, httpClient.BaseAddress.ToString().TrimEnd('/'), path, paramsObj.ToQueryString());
+
                 HttpRequestMessage httpRequestMessage = null;
                 if (method == HttpMethod.Get)
                 {
@@ -181,8 +185,8 @@ namespace CurrencyCloud
                 }
 
                 if (Retry.Enabled)
-                    Debug.WriteLine("[Retrying request] - Retries: {0}, MinWait: {1}, MaxWait: {2}, Jitter: {3}",
-                        Retry.NumRetries, Retry.MinWait, Retry.MaxWait, Retry.Jitter);
+                    Debug.WriteLine("UTC: {0} - Retrying request - Retries: {1}, MinWait: {2}, MaxWait: {3}, Jitter: {4}]",
+                        DateTime.UtcNow, Retry.NumRetries, Retry.MinWait, Retry.MaxWait, Retry.Jitter);
 
                 HttpResponseMessage res = Retry.Enabled ?
                     await retryPolicy.ExecuteAsync(
@@ -192,8 +196,9 @@ namespace CurrencyCloud
                 if (res.IsSuccessStatusCode)
                 {
                     string resString = await res.Content.ReadAsStringAsync();
+                    Debug.WriteLine("UTC: {0} - HTTP Response: {1}", DateTime.UtcNow, resString);
 
-                    var serializerSettings = new JsonSerializerSettings()
+                    var serializerSettings = new JsonSerializerSettings
                     {
                         NullValueHandling = NullValueHandling.Ignore,
                         ContractResolver = new PascalContractResolver()
@@ -371,6 +376,7 @@ namespace CurrencyCloud
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(account);
             string id = account.Id;
+
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentException("Account Id cannot be null");
 
@@ -446,14 +452,6 @@ namespace CurrencyCloud
         public async Task<Beneficiary> ValidateBeneficiaryAsync(Beneficiary beneficiary)
         {
             var paramsObj = ParamsObject.CreateFromStaticObject(beneficiary);
-
-            return await RequestAsync<Beneficiary>("/v2/beneficiaries/validate", HttpMethod.Post, paramsObj);
-        }
-
-        [Obsolete("Method ValidateBeneficiaryAsync(BeneficiaryValidateParameters) is deprecated. Use ValidateBeneficiaryAsync(Beneficiary) instead", false)]
-        public async Task<Beneficiary> ValidateBeneficiaryAsync(BeneficiaryValidateParameters validateParameters)
-        {
-            var paramsObj = ParamsObject.CreateFromStaticObject(validateParameters);
 
             return await RequestAsync<Beneficiary>("/v2/beneficiaries/validate", HttpMethod.Post, paramsObj);
         }
@@ -654,7 +652,7 @@ namespace CurrencyCloud
         /// <summary>
         /// Quotes cost of cancelling conversion identified by the provided unique id.
         /// </summary>
-        /// <param name="id">Id of the conversion that is being quoted</param>
+        /// <param name="conversionCancellationQuote">Object holding the Id of the conversion that is being quoted</param>
         /// <returns>Asynchronous task, which returns the details of the cancelled conversion</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
@@ -668,8 +666,7 @@ namespace CurrencyCloud
         /// <summary>
         /// Cancels the conversion identified by the provided unique id.
         /// </summary>
-        /// <param name="id">Id of the conversion that is being cancelled</param>
-        /// <param name="notes">Notes describing the reason for cancellation</param>
+        /// <param name="conversionCancellation">Object holding the Id and Notes (optional) of the conversion that is being cancelled</param>
         /// <returns>Asynchronous task, which returns the details of the cancelled conversion</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
@@ -687,8 +684,7 @@ namespace CurrencyCloud
         /// <summary>
         /// Returns an object containing the quote for changing the date of the specified conversion.
         /// </summary>
-        /// <param name="id">Id of the conversion that is being changed</param>
-        /// <param name="newSettlementDate">New conversion settlement date</param>
+        /// <param name="conversionDateChange">Object holding the Id and New Settlement Date of the conversion that is being changed</param>
         /// <returns>Asynchronous task, which returns the details of the conversion date change</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
@@ -709,8 +705,7 @@ namespace CurrencyCloud
         /// <summary>
         /// Changes the date ofthe conversion identified by the provided unique id.
         /// </summary>
-        /// <param name="id">Id of the conversion that is being changed</param>
-        /// <param name="newSettlementDate">New conversion settlement date</param>
+        /// <param name="conversionDateChange">Object holding the Id and New Settlement Date of the conversion that is being changed</param>
         /// <returns>Asynchronous task, which returns the details of the conversion date change</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
@@ -731,8 +726,7 @@ namespace CurrencyCloud
         /// <summary>
         /// Show all changes made to the settlement date of an existing conversion.
         /// </summary>
-        /// <param name="id">Id of the conversion that is being changed</param>
-        /// <returns>Asynchronous task, which returns all changes made to the settlement date of the conversion</returns>
+        /// <param name="conversionDateChangeDetails">Object holding the Id of the conversion that is being changed</param>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
         public async Task<ConversionDateChangeDetails> DateChangeDetailsConversionAsync(Conversion conversionDateChangeDetails)
@@ -745,8 +739,7 @@ namespace CurrencyCloud
         /// <summary>
         /// Previews a conversion split.
         /// </summary>
-        /// <param name="id">Id of the conversion to preview a split</param>
-        /// <param name="amount">The amount at which to split this conversion</param>
+        /// <param name="conversionSplit">Object holding the Id and Amount of the conversion to preview a split</param>
         /// <returns>Asynchronous task, which returns the details of the split conversion</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
@@ -768,8 +761,7 @@ namespace CurrencyCloud
         /// <summary>
         /// Splits a conversion.
         /// </summary>
-        /// <param name="id">Id of the conversion that is being splt</param>
-        /// <param name="amount">The amount at which to split this conversion</param>
+        /// <param name="conversionSplit">Object holding the Id and Amount of the conversion to split</param>
         /// <returns>Asynchronous task, which returns the details of the split conversion</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
@@ -791,7 +783,7 @@ namespace CurrencyCloud
         /// <summary>
         /// Conversion split history.
         /// </summary>
-        /// <param name="id">Id of the conversion</param>
+        /// <param name="conversionSplit">Object holding the Id of the conversion to query</param>
         /// <returns>Asynchronous task, which returns the split history for a given conversion</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
@@ -831,7 +823,7 @@ namespace CurrencyCloud
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
-            return await RequestAsync<PaginatedIbans>("/v2/ibans", HttpMethod.Get, optional);
+            return await RequestAsync<PaginatedIbans>("/v2/ibans/find", HttpMethod.Get, optional);
         }
 
         /// <summary>
@@ -841,6 +833,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns structure containing the details of the IBAN assigned to the sub-accounts.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        [Obsolete("Method FindSubAccountsIbansAsync(IbanFindParameters) is deprecated. Use FindIbansAsync(IbanFindParameters) instead", false)]
         public async Task<PaginatedIbans> FindSubAccountsIbansAsync(IbanFindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
@@ -855,6 +848,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns structure containing the details of the IBAN assigned to the sub-accounts.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        [Obsolete("Method GetSubAccountsIbansAsync(string) is deprecated. Use FindIbansAsync(IbanFindParameters) instead", false)]
         public async Task<PaginatedIbans> GetSubAccountsIbansAsync(string id)
         {
             return await RequestAsync<PaginatedIbans>("/v2/ibans/subaccounts/" + id, HttpMethod.Get, null);
@@ -999,18 +993,31 @@ namespace CurrencyCloud
         /// <summary>
         /// Returns an array of PaymentAuthorisation Objects
         /// </summary>
-        /// <param name="payment_ids[]">Payment Ids Array</param>
+        /// <param name="paymentIds">Array of Payment Ids to authorise</param>
         /// <returns>Asynchronous task, which returns an array of PaymentAuthorisation Objects</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaymentAuthorisation[]> PaymentAuthorisationAsync(string[] payment_ids)
+        public async Task<PaymentAuthorisationsList> PaymentAuthorisationAsync(string[] paymentIds)
         {
-            if (payment_ids.Length < 1)
+            if (paymentIds.Length < 1)
                 throw new ArgumentException("Payment IDs can not be null");
 
-            ParamsObject paramsObj = ParamsObject.CreateFromStaticObject(payment_ids);
+            var paramsObj = new ParamsObject();
+            paramsObj.AddNotNull("PaymentIds", paymentIds);
 
-            return await RequestAsync<PaymentAuthorisation[]>("/v2/payments/authorise", HttpMethod.Post, paramsObj);
+            return await RequestAsync<PaymentAuthorisationsList>("/v2/payments/authorise", HttpMethod.Post, paramsObj);
+        }
+
+        /// <summary>
+        /// Returns an object containing the confirmation details of a payment.
+        /// </summary>
+        /// <param name="id">Id of payment.</param>
+        /// <returns>Asynchronous task, which returns the confirmation details of a payment.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaymentConfirmation> GetPaymentConfirmationAsync(string id)
+        {
+            return await RequestAsync<PaymentConfirmation>("/v2/payments/" + id + "/confirmation", HttpMethod.Get, null);
         }
 
         #endregion
@@ -1194,6 +1201,64 @@ namespace CurrencyCloud
 
         #endregion
 
+        #region Reports
+
+        /// <summary>
+        /// Finds report requests matching the given search criteria.
+        /// </summary>
+        /// <param name="parameters">Find parameters</param>
+        /// <returns>Asynchronous task, which returns  the list of the report requests, as well as pagination information.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedReportRequests> FindReportRequestsAsync(ReportRequestFindParameters parameters = null)
+        {
+            ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
+
+            return await RequestAsync<PaginatedReportRequests>("/v2/reports/report_requests/find", HttpMethod.Get, optional);
+        }
+
+        /// <summary>
+        /// Gets details of the specified report request.
+        /// </summary>
+        /// <param name="id">Id of the requested report.</param>
+        /// <returns>Asynchronous task, which returns the requested transaction.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<ReportRequest> GetReportRequestAsync(string id)
+        {
+            return await RequestAsync<ReportRequest>("/v2/reports/report_requests/" + id, HttpMethod.Get, null);
+        }
+
+        /// <summary>
+        /// Creates a new Conversion Report.
+        /// </summary>
+        /// <param name="parameters">Parameters for new Report</param>
+        /// <returns>Asynchronous task, which returns newly created conversion.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<ReportRequest> CreateConversionReportAsync(ReportParameters parameters = null)
+        {
+            var paramsObj = ParamsObject.CreateFromStaticObject(parameters);
+
+            return await RequestAsync<ReportRequest>("/v2/reports/conversions/create", HttpMethod.Post, paramsObj);
+        }
+
+        /// <summary>
+        /// Creates a new Payment Report.
+        /// </summary>
+        /// <param name="parameters">Parameters for new Report</param>
+        /// <returns>Asynchronous task, which returns newly created conversion.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<ReportRequest> CreatePaymentReportAsync(ReportParameters parameters = null)
+        {
+            var paramsObj = ParamsObject.CreateFromStaticObject(parameters);
+
+            return await RequestAsync<ReportRequest>("/v2/reports/payments/create", HttpMethod.Post, paramsObj);
+        }
+
+        #endregion
+
         #region Settlements
 
         /// <summary>
@@ -1340,6 +1405,18 @@ namespace CurrencyCloud
             return await RequestAsync<PaginatedTransactions>("/v2/transactions/find", HttpMethod.Get, optional);
         }
 
+        /// <summary>
+        /// Get Sender Details.
+        /// </summary>
+        /// <param name="id">Id of the requested transaction.</param>
+        /// <returns>Asynchronous task, which returns details of the sender of funds.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<SenderDetails> GetSenderDetailsAsync(string id)
+        {
+            return await RequestAsync<SenderDetails>("/v2/transactions/sender/" + id, HttpMethod.Get, null);
+        }
+
         #endregion
 
         #region Transfers
@@ -1395,7 +1472,21 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the details of the Virtual Accounts assigned to the logged in account.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<PaginatedVirtualAccounts> FindVirtualAccountsAsync(FindParameters parameters = null)
+        public async Task<PaginatedVirtualAccounts> FindVirtualAccountsAsync(VirtualAccountFindParameters parameters = null)
+        {
+            ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
+
+            return await RequestAsync<PaginatedVirtualAccounts>("/v2/virtual_accounts/find", HttpMethod.Get, optional);
+        }
+
+        /// <summary>
+        /// Get a list of Virtual Account Numbers attached to the authenticating user's account.
+        /// </summary>
+        /// <param name="parameters">Find parameters</param>
+        /// <returns>Asynchronous task, which returns the details of the Virtual Accounts assigned to the logged in account.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedVirtualAccounts> GetVirtualAccountsAsync(FindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
@@ -1409,6 +1500,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the details of the Virtual Accounts assigned to the sub-accounts.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        [Obsolete("Method FindSubAccountsVirtualAccountsAsync(FindParameters) is deprecated. Use FindVirtualAccountsAsync(FindParameters) instead", false)]
         public async Task<PaginatedVirtualAccounts> FindSubAccountsVirtualAccountsAsync(FindParameters parameters = null)
         {
             ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
@@ -1423,6 +1515,7 @@ namespace CurrencyCloud
         /// <returns>Asynchronous task, which returns the details of the Virtual Accounts assigned to the sub-accounts.</returns>
         /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
         /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        [Obsolete("Method GetSubAccountVirtualAccountsAsync(string) is deprecated. Use FindVirtualAccountsAsync(FindParameters) instead", false)]
         public async Task<PaginatedVirtualAccounts> GetSubAccountVirtualAccountsAsync(string id)
         {
             return await RequestAsync<PaginatedVirtualAccounts>("/v2/virtual_accounts/subaccounts/" + id, HttpMethod.Get, null);

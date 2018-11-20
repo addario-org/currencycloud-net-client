@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using CurrencyCloud.Entity;
 using CurrencyCloud.Tests.Mock.Data;
 using CurrencyCloud.Entity.Pagination;
@@ -51,8 +50,6 @@ namespace CurrencyCloud.Tests
                 Currency = iban.Currency
             });
 
-            Console.WriteLine("Found: " + found.Ibans[0]);
-
             Assert.AreEqual(iban.Id, found.Ibans[0].Id);
             Assert.AreEqual(iban.IbanCode, found.Ibans[0].IbanCode);
             Assert.AreEqual(iban.AccountId, found.Ibans[0].AccountId);
@@ -75,8 +72,6 @@ namespace CurrencyCloud.Tests
             var iban = Ibans.Iban1;
 
             PaginatedIbans found = await client.FindIbansAsync();
-
-            Console.WriteLine("Found: " + found.Ibans[0]);
 
             Assert.AreEqual(iban.Id, found.Ibans[0].Id);
             Assert.AreEqual(iban.IbanCode, found.Ibans[0].IbanCode);
@@ -101,8 +96,6 @@ namespace CurrencyCloud.Tests
 
             PaginatedIbans found = await client.FindSubAccountsIbansAsync(new IbanFindParameters());
 
-            Console.WriteLine("Found: " + found.Ibans[0]);
-
             Assert.AreEqual(iban.Id, found.Ibans[0].Id);
             Assert.AreEqual(iban.IbanCode, found.Ibans[0].IbanCode);
             Assert.AreEqual(iban.AccountId, found.Ibans[0].AccountId);
@@ -125,8 +118,6 @@ namespace CurrencyCloud.Tests
             var iban = Ibans.Iban1;
 
             PaginatedIbans found = await client.GetSubAccountsIbansAsync(iban.Id);
-
-            Console.WriteLine("Found: " + found.Ibans[0]);
 
             Assert.AreEqual(iban.Id, found.Ibans[0].Id);
             Assert.AreEqual(iban.IbanCode, found.Ibans[0].IbanCode);
