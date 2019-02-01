@@ -36,7 +36,7 @@ namespace CurrencyCloud
         private HttpClient httpClient;
         private Credentials credentials;
         private string onBehalfOf;
-        private const string userAgent = "CurrencyCloudSDK/2.0 .NET/3.0.1";
+        private const string userAgent = "CurrencyCloudSDK/2.0 .NET/4.0.0";
 
         internal string Token
         {
@@ -721,19 +721,6 @@ namespace CurrencyCloud
                 throw new ArgumentException("New Settlement Date cannot be null");
 
             return await RequestAsync<ConversionDateChange>("/v2/conversions/" + id + "/date_change", HttpMethod.Post, paramsObj);
-        }
-
-        /// <summary>
-        /// Show all changes made to the settlement date of an existing conversion.
-        /// </summary>
-        /// <param name="conversionDateChangeDetails">Object holding the Id of the conversion that is being changed</param>
-        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
-        /// <exception cref="ApiException">Thrown when API call fails.</exception>
-        public async Task<ConversionDateChangeDetails> DateChangeDetailsConversionAsync(Conversion conversionDateChangeDetails)
-        {
-            string id = conversionDateChangeDetails.Id;
-
-            return await RequestAsync<ConversionDateChangeDetails>("/v2/conversions/" + id + "/date_change/details", HttpMethod.Get, null);
         }
 
         /// <summary>
