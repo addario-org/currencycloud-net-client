@@ -1,17 +1,18 @@
 sudo: false
 language: csharp
 mono:
-  - latest
-  - 5.20.1
-  - 5.16.0
-  - 5.14.0
-  - 5.12.0
-
+- latest
+- 5.20.1
+- 5.16.0
+- 5.14.0
+- 5.12.0
 install:
-  - nuget restore ./Source/CurrencyCloud.sln
-  - nuget install NUnit.Console -Version 3.10.0
-
+- nuget restore ./Source/CurrencyCloud.sln
+- nuget install NUnit.Console -Version 3.10.0
 script:
-  - nuget restore ./Source/CurrencyCloud.sln
-  - msbuild /p:Configuration=Release ./Source/CurrencyCloud.sln
-  - mono ./NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./Source/CurrencyCloud.Tests/bin/Release/CurrencyCloud.Tests.dll
+- nuget restore ./Source/CurrencyCloud.sln
+- msbuild /p:Configuration=Release ./Source/CurrencyCloud.sln
+- mono ./NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe ./Source/CurrencyCloud.Tests/bin/Release/CurrencyCloud.Tests.dll
+notifications:
+  slack:
+    secure: Ocsf0WeUUeXNdkAl9oVkxwN/QvAcPjpVboO2gbbmBynmu0RMLbMOCIowNgKJBa9y5InmEXUjLC8yOgjZYJDyhvuLg7bvcjUh8dSWDoQScmXrNEyyugYipwhrILzcBt4KLscB3/WBzwn7Q/s4dJcvDQQHjAcSnS6T8XCwYnJmf+/5DC3GEatW3FHZb3Oov8euG7hUjl/f6WHkofBOYA4irezeslYxheZgMaQDBZFrM9cCWaE6Li5l/nXiz42GHbyY78K5xnZR5rIDLWiQhdLPVRfRGrqXTldp6eE0uiZowXwUd8M8JOlseuA153RAUNM4/qf1UTXbIvzQYjoyeUMVq9Qc79/195tbudBAwk2Tafaxvhv/Lca30z3tAXUiIv78sXbK9f6uw1BCZv/Bz0nU7HzF+maxz/eHZYEo5qbv3haqcHXsbinwLg8fcO840y//KaD8r5sfboTA4IR5hsjbgPOpWnYFH13yjvTS4avSEjaiMHnSRQFRkYhZhFL6ENfwC7hQRMLfmzdhiQHSLbg6K7TcVnp3A7Y1uyQk36g5qfGoT/TTe8CYl27t02dneg5B5UJLBHgAvsN44INrCiWb1YXlIiVAhy8/blsysYEiuC0w7zbK0pG/Xhry+3vIoSFEivA5GGfHg8/jE+8qa9OdgTcXXcyFPUbfndwdzPboJHk=
