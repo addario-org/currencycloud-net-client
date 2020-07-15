@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using CurrencyCloud.Tests.Mock.Data;
 using CurrencyCloud.Tests.Mock.Http;
 using CurrencyCloud.Environment;
@@ -80,6 +81,24 @@ namespace CurrencyCloud.Tests
             PaginatedBalances found = await client.FindBalancesAsync();
 
             Assert.Contains(balance, found.Balances);
+        }
+        
+        /// <summary>
+        /// Successfully Top Up Margin Balance.
+        /// </summary>
+        [Test]
+        public async Task TopUpMarginBalance()
+        {
+            player.Play("TopUpMarginBalance");
+
+            MarginBalanceTopUp topUp = await client.TopUpMarginBalanceAsync("GBP", 450);
+            Assert.NotNull(topUp);
+            Assert.AreEqual("GBP", topUp.Currency);
+            Assert.AreEqual(450, topUp.TransferredAmount);
+            Assert.AreEqual("6c046c51-2387-4004-8e87-4bf97102e36d", topUp.AccountId);
+            Assert.AreEqual(DateTime.Parse("2018-01-01 12:34:56"), topUp.TransferCompletedAt);
+
+
         }
     }
 }
