@@ -79,6 +79,7 @@
     <Compile Include="Entity\Find\ConversionFindParameters.cs" />
     <Compile Include="Entity\Find\ConversionProfitAndLossFindParameters.cs" />
     <Compile Include="Entity\Find\FindParameters.cs" />
+    <Compile Include="Entity\Find\FundingAccountFindParameters.cs" />
     <Compile Include="Entity\Find\IbanFindParameters.cs" />
     <Compile Include="Entity\Find\PaymentFindParameters.cs" />
     <Compile Include="Entity\Find\ReportRequestFindParameters.cs" />
@@ -86,12 +87,16 @@
     <Compile Include="Entity\Find\TransactionFindParameters.cs" />
     <Compile Include="Entity\Find\TransferFindParameters.cs" />
     <Compile Include="Entity\Find\VirtualAccountFindParameters.cs" />
+    <Compile Include="Entity\FundingAccount.cs" />
     <Compile Include="Entity\Iban.cs" />
     <Compile Include="Entity\List\PayerDetailsList.cs" />
     <Compile Include="Entity\List\PaymentAuthorisationsList.cs" />
     <Compile Include="Entity\List\PaymentChargesSettingsList.cs" />
+    <Compile Include="Entity\List\PaymentFeeRulesList.cs" />
     <Compile Include="Entity\List\PaymentPurposeCodesList.cs" />
+    <Compile Include="Entity\MarginBalanceTopUp.cs" />
     <Compile Include="Entity\Pagination\PaginatedConversionProfitAndLosses.cs" />
+    <Compile Include="Entity\Pagination\PaginatedFundingAccounts.cs" />
     <Compile Include="Entity\Pagination\PaginatedIbans.cs" />
     <Compile Include="Entity\Pagination\PaginatedReportRequests.cs" />
     <Compile Include="Entity\Pagination\PaginatedTransactions.cs" />
@@ -102,6 +107,7 @@
     <Compile Include="Entity\PaymentConfirmation.cs" />
     <Compile Include="Entity\PaymentDeliveryDates.cs" />
     <Compile Include="Entity\PaymentSubmission.cs" />
+    <Compile Include="Entity\QuotePaymentFee.cs" />
     <Compile Include="Entity\ReportParameters.cs" />
     <Compile Include="Entity\ReportRequest.cs" />
     <Compile Include="Entity\SenderDetails.cs" />

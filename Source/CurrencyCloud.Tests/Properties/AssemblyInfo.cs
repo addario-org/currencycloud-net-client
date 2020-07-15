@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Currencycloud")]
 [assembly: AssemblyProduct("Currencycloud.Tests")]
-[assembly: AssemblyCopyright("Copyright © Currencycloud 2015-2019")]
+[assembly: AssemblyCopyright("Copyright © Currencycloud 2015-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("5.1.0")]
-[assembly: AssemblyFileVersion("5.1.0")]
+[assembly: AssemblyVersion("5.5.6")]
+[assembly: AssemblyFileVersion("5.5.6")]

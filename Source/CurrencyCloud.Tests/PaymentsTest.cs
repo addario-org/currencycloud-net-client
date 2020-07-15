@@ -151,7 +151,7 @@ namespace CurrencyCloud.Tests
         {
             player.Play("Authorise");
 
-            PaymentAuthorisationsList gotten = await client.PaymentAuthorisationAsync( new []
+            PaymentAuthorisationsList gotten = await client.PaymentAuthorisationAsync(new[]
             {
                 "8e3aeeb8-deeb-4665-96de-54b880a953ac",
                 "f16cafe4-1f8f-472e-99d9-8c828918d4f8",
@@ -240,7 +240,7 @@ namespace CurrencyCloud.Tests
         {
             player.Play("GetPaymentDeliveryDates");
 
-            var paymentDeliveryDates = new PaymentDeliveryDates(new DateTime(2018, 1, 1),"regular", "EUR", "IT");
+            var paymentDeliveryDates = new PaymentDeliveryDates(new DateTime(2018, 1, 1), "regular", "EUR", "IT");
 
             PaymentDeliveryDates created = await client.GetPaymentDeliveryDatesAsync(paymentDeliveryDates);
 
@@ -248,6 +248,42 @@ namespace CurrencyCloud.Tests
             Assert.AreEqual(created.Currency, "EUR");
             Assert.AreEqual(created.BankCountry, "IT");
             Assert.AreEqual(created.PaymentType, "regular");
+        }
+
+        /// <summary>
+        /// Successfully gets a quote payments fee
+        /// </summary>
+        [Test]
+        public async Task GetQuotePaymentFee()
+        {
+            player.Play("GetQuotePaymentFee");
+
+            var quotePaymentFee = new QuotePaymentFee(null, "USD", "US", "regular");
+
+            QuotePaymentFee created = await client.GetQuotePaymentFee(quotePaymentFee);
+
+            Assert.NotNull(created);
+            Assert.AreEqual("0534aaf2-2egg-0134-2f36-10b11cd33cfb", created.AccountId);
+            Assert.AreEqual("USD", created.PaymentCurrency);
+            Assert.AreEqual("US", created.PaymentDestinationCountry);
+            Assert.AreEqual("regular", created.PaymentType);
+            Assert.Null(created.ChargeType);
+            Assert.AreEqual("EUR", created.FeeCurrency);
+            Assert.AreEqual(10.0, created.FeeAmount);
+        }
+
+        /// <summary>
+        /// Successfully gets a payment with fee.
+        /// </summary>
+        [Test]
+        public async Task GetWithFee()
+        {
+            player.Play("GetWithFee");
+
+            Payment gotten = await client.GetPaymentAsync("855fa573-1ace-4da2-a55b-912f10103056");
+
+            Assert.AreEqual(100, gotten.FeeAmount);
+            Assert.AreEqual("GBP", gotten.FeeCurrency);
         }
     }
 }
