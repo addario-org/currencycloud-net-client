@@ -36,7 +36,7 @@ namespace CurrencyCloud
         private HttpClient httpClient;
         private Credentials credentials;
         private string onBehalfOf;
-        private const string userAgent = "CurrencyCloudSDK/2.0 .NET/5.2.2";
+        private const string userAgent = "CurrencyCloudSDK/2.0 .NET/5.5.6";
 
         internal string Token
         {
@@ -471,6 +471,24 @@ namespace CurrencyCloud
             return await RequestAsync<PaginatedBalances>("/v2/balances/find", HttpMethod.Get, optional);
         }
 
+        /// <summary>
+        /// Top up the margin balance for a currency.
+        /// </summary>
+        /// <param name="currency">Currency to top up the balance with.</param>
+        /// <param name="amount">Amount to top up the balance with.</param>
+        /// <returns>Asynchronous task, which tops up the given margin balance.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<MarginBalanceTopUp> TopUpMarginBalanceAsync(string currency, decimal amount)
+        {
+            if (string.IsNullOrEmpty(currency))
+                throw new ArgumentException("Currency can not be null");
+            var paramsObj = new ParamsObject();
+            paramsObj.AddNotNull("Currency", currency);
+            paramsObj.AddNotNull("Amount", amount);
+            return await RequestAsync<MarginBalanceTopUp>("/v2/balances/top_up_margin", HttpMethod.Post, paramsObj);
+        }
+        
         #endregion
 
         #region Beneficiaries
@@ -829,7 +847,25 @@ namespace CurrencyCloud
         }
 
         #endregion
+        
+        #region Funding
+        
+        /// <summary>
+        /// Returns an object that contains information related to Funding Accounts
+        /// </summary>
+        /// <param name="parameters">Find parameters</param>
+        /// <returns>Asynchronous task, which returns the list of the funding accounts, as well as pagination information.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaginatedFundingAccounts> FindFundingAccountsAsync(FundingAccountFindParameters parameters = null)
+        {
+            ParamsObject optional = ParamsObject.CreateFromStaticObject(parameters);
 
+            return await RequestAsync<PaginatedFundingAccounts>("/v2/funding_accounts/find", HttpMethod.Get, optional);
+        }
+        
+        #endregion
+        
         #region Ibans
 
         /// <summary>
@@ -1035,6 +1071,20 @@ namespace CurrencyCloud
             return await RequestAsync<PaymentDeliveryDates>("/v2/payments/payment_delivery_date", HttpMethod.Get, paramsObj);
         }
 
+        /// <summary>
+        /// Gets the calculated quote for the fee that will be applied against a payment
+        /// </summary>
+        /// <param name="quotePaymentFee">Quote Payment Fee Details</param>
+        /// <returns>Asynchronous task, which returns the Quote Payment Fee.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<QuotePaymentFee> GetQuotePaymentFee(QuotePaymentFee quotePaymentFee)
+        {
+            var paramsObj = ParamsObject.CreateFromStaticObject(quotePaymentFee);
+
+            return await RequestAsync<QuotePaymentFee>("/v2/payments/quote_payment_fee", HttpMethod.Get, paramsObj);
+        }
+        
         #endregion
 
         #region Rates
@@ -1230,7 +1280,26 @@ namespace CurrencyCloud
 
             return await RequestAsync<BankDetails>("/v2/reference/bank_details", HttpMethod.Get, paramsObj);
         }
-        
+
+        /// <summary>
+        /// Gets Payment Fee Rules.
+        /// </summary>
+        /// <param name="accountId">AccountId</param>
+        /// <param name="paymentType">PaymentType</param>
+        /// <param name="chargeType">ChargeType</param>
+        /// <returns>Asynchronous task, which returns the Bank Details.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when client is not initialized.</exception>
+        /// <exception cref="ApiException">Thrown when API call fails.</exception>
+        public async Task<PaymentFeeRulesList> GetPaymentFeeRulesAsync(string accountId=null, string paymentType=null, string chargeType=null)
+        {
+            var paramsObj = new ParamsObject();
+            paramsObj.AddNotNull("AccountId", accountId);
+            paramsObj.AddNotNull("PaymentType", paymentType);
+            paramsObj.AddNotNull("ChargeType", chargeType);
+
+            return await RequestAsync<PaymentFeeRulesList>("/v2/reference/payment_fee_rules", HttpMethod.Get, paramsObj);
+        }
+
         #endregion
 
         #region Reports
@@ -1559,16 +1628,16 @@ namespace CurrencyCloud
             JObject errorObject = JObject.Parse(errorString);
 
             var errors = from JProperty error in errorObject["error_messages"]
-                         select new Error(error.Name,
-                            (from errorMessage in error.Value
-                             select new Error.ErrorMessage(errorMessage["code"].Value<string>(),
-                                                           errorMessage["message"].Value<string>(),
-                                                           (from JProperty param in errorMessage["params"]
-                                                            select new KeyValuePair<string, string>(param.Name, param.Value.ToString()))
-                                                           .ToDictionary(x => x.Key, x => x.Value)))
-                            .ToList()
-            );
-
+                select new Error(error.Name, error.Value is JArray ? (from errorMessage in error.Value
+                        select new Error.ErrorMessage(errorMessage["code"].Value<string>(), errorMessage["message"].Value<string>(),
+                                (from JProperty param in errorMessage["params"]
+                                    select new KeyValuePair<string, string>(param.Name, param.Value.ToString()))
+                                    .ToDictionary(x => x.Key, x => x.Value)))
+                                    .ToList() : new List<Error.ErrorMessage>(){new Error.ErrorMessage(error.Value["code"].Value<string>(),
+                                        error.Value["message"].Value<string>(), (from JProperty param in error.Value["params"]
+                                            select new KeyValuePair<string, string>(param.Name, param.Value.ToString()))
+                                        .ToDictionary(x => x.Key, x => x.Value))}
+                );
             return errors.ToList();
         }
 
