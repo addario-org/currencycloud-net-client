@@ -1,6 +1,11 @@
-[![NuGet version](https://img.shields.io/nuget/v/CurrencyCloud.svg)](https://www.nuget.org/packages/CurrencyCloud/) [![Travis](https://travis-ci.org/EAddario/net-master.svg?branch=master)](https://travis-ci.org/github/EAddario/net-master)
-# Currencycloud
-This is the official .NET SDK for v2 of Currencycloud's API. Additional documentation for each API endpoint can be found at [Currencycloud API documentation][introduction]. If you have any queries or you require support, please contact our development team at development@currencycloud.com
+[![NuGet version](https://img.shields.io/nuget/v/CurrencyCloud.svg)](https://www.nuget.org/packages/CurrencyCloud/) [![Travis](https://travis-ci.org/Addario-org/net-master.svg?branch=master)](https://travis-ci.org/github/Addario-org/net-master)
+
+# Currencycloud .NET SDK
+
+## Version: 5.5.6-ea (FORK)
+This is a **FORK** from the official [.NET SDK for v2 of Currencycloud's API.][original] While it tries to keep in sync with the upstream version, it does also include enhancements and modifications ranging from bugfixes to usability features.
+
+Additional documentation for each API endpoint can be found at [Currencycloud API documentation][introduction]. If you have any queries or you require support, please contact their development team at development@currencycloud.com
 
 ## Installation
 The library is distributed on `NuGet`. To install the latest version, run the following command in the Package Manager Console: 
@@ -206,8 +211,11 @@ Once a feature has been marked as deprecated, we no longer develop the code or i
 We actively support the latest version of the SDK. We support the immediate previous version on best-efforts basis. All other versions are no longer supported nor maintained.
 
 # Copyright
-Copyright (c) 2015-2019 Currencycloud. See [LICENSE][license] for details.
+Copyright &copy; 2015-2020, Currencycloud. See [LICENSE][license] for details.
+Copyright &copy; modifications 2020, Ed Addario
 
+
+[original]:     https://github.com/CurrencyCloud/currencycloud-net
 [introduction]: https://developer.currencycloud.com/documentation/getting-started/introduction
 [overview]:     https://developer.currencycloud.com/documentation/api-docs/overview/
 [examples]:     Examples/Cookbook
