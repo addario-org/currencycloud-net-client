@@ -2,7 +2,7 @@
 
 # Currencycloud .NET SDK
 
-## Version: 5.5.6-ea (FORK)
+## Version: 5.5.6.1 (FORK)
 This is a **FORK** from the official [.NET SDK for v2 of Currencycloud's API.][original] While it tries to keep in sync with the upstream version, it does also include enhancements and modifications ranging from bugfixes to usability features.
 
 Additional documentation for each API endpoint can be found at [Currencycloud API documentation][introduction]. If you have any queries or you require support, please contact their development team at development@currencycloud.com
@@ -10,7 +10,7 @@ Additional documentation for each API endpoint can be found at [Currencycloud AP
 ## Installation
 The library is distributed on `NuGet`. To install the latest version, run the following command in the Package Manager Console: 
 ```sh
-PM> Install-Package Currencycloud
+PM> Install-Package currencycloud-net-client
 ```
 
 ## Supported .NET versions
