@@ -1,4 +1,8 @@
-[![NuGet version](https://img.shields.io/nuget/v/CurrencyCloud.svg)](https://www.nuget.org/packages/CurrencyCloud/) [![Travis](https://travis-ci.org/Addario-org/net-master.svg?branch=master)](https://travis-ci.org/github/Addario-org/net-master)
+[![Build Status](https://travis-ci.org/addario-org/currencycloud-net-client.svg?branch=master)](https://travis-ci.org/github/addario-org/currencycloud-net-client)
+[![Github Package](https://img.shields.io/badge/github%20package-v5.5.6.1-brightgreen)](https://github.com/addario-org/currencycloud-net-client/packages/330351)
+[![Issues](https://img.shields.io/github/issues/addario-org/currencycloud-net-client)](https://github.com/addario-org/currencycloud-net-client/issues)
+[![License](https://img.shields.io/github/license/addario-org/currencycloud-net-client)](https://github.com/addario-org/currencycloud-net-client/blob/master/LICENSE.md)
+[![Last Commit](https://img.shields.io/github/last-commit/addario-org/currencycloud-net-client)](https://github.com/addario-org/currencycloud-net-client/commits/master)
 
 # Currencycloud .NET SDK
 
