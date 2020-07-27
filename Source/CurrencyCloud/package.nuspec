@@ -4,15 +4,16 @@
         <id>currencycloud-net-client</id>
         <version>5.5.6.1</version>
         <title>Currencycloud .NET API client library (FORK)</title>
-        <authors>EAddario</authors>
+        <authors>Ed Addario</authors>
         <owners>addario-org</owners>
         <license type="expression">MIT</license>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <projectUrl>https://github.com/addario-org/currencycloud-net-client</projectUrl>
+        <repository type="git" url="https://github.com/addario-org/currencycloud-net-client.git" />
         <description>The client library which implements Currencycloud's APIs.</description>
         <summary>Fork of the official .NET SDK for v2 of Currencycloud's API. While it tries to keep in sync with the upstream version, it does also include enhancements and modifications ranging from bugfixes to usability features.</summary>
         <copyright>Copyright © 2015-2020 Currencycloud. Copyright © modifications 2020, Ed Addario</copyright>
-        <tags>Currencycloud .NET API client library (FORK)</tags>
+        <tags>Currencycloud</tags>
         <releaseNotes></releaseNotes>
         <dependencies>
             <group targetFramework="net45">

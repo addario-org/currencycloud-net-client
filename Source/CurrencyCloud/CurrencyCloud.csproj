@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E2C08EFF-8A14-4C77-ABD3-C9E193AE81E8}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -12,12 +12,12 @@
     <PackageId>currencycloud-net-client</PackageId>
     <PackageDescription>Currencycloud .NET API client library (FORK)</PackageDescription>
     <RepositoryUrl>https://github.com/addario-org/currencycloud-net-client</RepositoryUrl>
-    <Authors>EAddario</Authors>
+    <RepositoryType>git</RepositoryType>
+    <Authors>Ed Addario</Authors>
     <Company>addario-org</Company>
     <Version>5.5.6.1</Version>
     <Copyright>Copyright © 2015-2020 Currencycloud. Copyright © modifications 2020, Ed Addario</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
