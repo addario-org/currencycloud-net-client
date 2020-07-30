@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/addario-org/currencycloud-net-client.svg?branch=master)](https://travis-ci.org/github/addario-org/currencycloud-net-client)
 [![Github Package](https://img.shields.io/badge/github%20package-v5.5.6.1-brightgreen)](https://github.com/addario-org/currencycloud-net-client/packages/330351)
+[![Nuget Package](https://img.shields.io/badge/nuget%20package-v5.5.6.1-brightgreen)](https://www.nuget.org/packages/currencycloud-net-client/)
 [![Issues](https://img.shields.io/github/issues/addario-org/currencycloud-net-client)](https://github.com/addario-org/currencycloud-net-client/issues)
 [![License](https://img.shields.io/github/license/addario-org/currencycloud-net-client)](https://github.com/addario-org/currencycloud-net-client/blob/master/LICENSE.md)
 [![Last Commit](https://img.shields.io/github/last-commit/addario-org/currencycloud-net-client)](https://github.com/addario-org/currencycloud-net-client/commits/master)
